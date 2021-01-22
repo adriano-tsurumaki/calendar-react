@@ -17,11 +17,12 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.div`
-    margin: 30px 0 0 40px;
+    margin: 30px 40px 0 40px;
 `;
 
 export const Title = styled.div`
     display: flex;
+    justify-content: space-between;
     align-items: center;
     font-size: 18px;
     color: ${props => props.theme.colors.black};
@@ -39,6 +40,16 @@ export const Title = styled.div`
         &:hover {
             color: #000000;
         }
+    }
+
+    > span::-moz-selection, > span strong::-moz-selection { 
+        color: ${props => props.theme.colors.black};
+        background: none;
+    }
+
+    > span::selection, > span strong::selection {
+        color: ${props => props.theme.colors.black};
+        background: none;
     }
 `;
 
