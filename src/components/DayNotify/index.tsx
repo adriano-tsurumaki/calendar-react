@@ -12,13 +12,36 @@ import {
     SchedulePresentation
 } from './styles';
 
-const DayNotify: React.FC = () => {
+import days from '../../utils/days';
+import months from '../../utils/months';
+
+interface IContentDayNotifyProps {
+    dateSelected: number;
+    setDateSelected: React.Dispatch<React.SetStateAction<number>>;
+    daySelected: number;
+    setDaySelected: React.Dispatch<React.SetStateAction<number>>;
+    monthSelected: number;
+    setMonthSelected: React.Dispatch<React.SetStateAction<number>>;
+    yearSelected: number;
+    setYearSelected: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const DayNotify: React.FC<IContentDayNotifyProps> = ({
+    dateSelected,
+    setDateSelected,
+    daySelected,
+    setDaySelected,
+    monthSelected,
+    setMonthSelected,
+    yearSelected,
+    setYearSelected
+}) => {
     return (
         <Container>
             <Header>
                 <Title>
                     <BiCalendarCheck />
-                    <span><strong>Segunda-feira</strong>, 10 de Agosto</span>
+                    <span><strong>{days[daySelected]}</strong>, {dateSelected} de {months[monthSelected]}</span>
                 </Title>
             </Header>
 
@@ -45,7 +68,17 @@ const DayNotify: React.FC = () => {
 
                 <ScheduleItem>
                     <ScheduleHour className="schedule-hour">08:30</ScheduleHour>
-                    <SchedulePresentation>Start with design project</SchedulePresentation>
+                    <SchedulePresentation>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, corporis sit, reiciendis similique facere non sequi eos sed voluptatem voluptatibus eius quaerat nostrum neque voluptate impedit iusto? Magni, excepturi quas!</SchedulePresentation>
+                </ScheduleItem>
+                
+                <ScheduleItem>
+                    <ScheduleHour className="schedule-hour">08:30</ScheduleHour>
+                    <SchedulePresentation>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, corporis sit, reiciendis similique facere non sequi eos sed voluptatem voluptatibus eius quaerat nostrum neque voluptate impedit iusto? Magni, excepturi quas!</SchedulePresentation>
+                </ScheduleItem>
+
+                <ScheduleItem>
+                    <ScheduleHour className="schedule-hour">08:30</ScheduleHour>
+                    <SchedulePresentation>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, corporis sit, reiciendis similique facere non sequi eos sed voluptatem voluptatibus eius quaerat nostrum neque voluptate impedit iusto? Magni, excepturi quas!</SchedulePresentation>
                 </ScheduleItem>
 
 

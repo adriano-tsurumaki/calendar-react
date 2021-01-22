@@ -1,4 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
+
+import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
 import { 
     Container,
@@ -11,40 +13,98 @@ import {
     DayField
 } from './styles';
 
-const ContentCalendar: React.FC = () => {
+import months from '../../utils/months';
 
-    const [daySelected, setDaySelected] = useState<number>(new Date().getDate());
-    const [monthSelected, setMonthSelected] = useState<number>(new Date().getMonth());
-    const [yearSelected, setYearSelected] = useState<number>(new Date().getFullYear());
+interface IContentCalendarProps {
+    dateSelected: number;
+    setDateSelected: React.Dispatch<React.SetStateAction<number>>;
+    daySelected: number;
+    setDaySelected: React.Dispatch<React.SetStateAction<number>>;
+    monthSelected: number;
+    setMonthSelected: React.Dispatch<React.SetStateAction<number>>;
+    yearSelected: number;
+    setYearSelected: React.Dispatch<React.SetStateAction<number>>;
+}
+
+interface IDaysPerWeekUnformattedProps {
+    date: number;
+    day: number;
+    month: number;
+    status: string;
+    week: number;
+}
+
+const ContentCalendar: React.FC<IContentCalendarProps> = ({
+    dateSelected,
+    setDateSelected,
+    daySelected,
+    setDaySelected,
+    monthSelected,
+    setMonthSelected,
+    yearSelected,
+    setYearSelected
+}) => {
 
     const fillDay = useMemo(() => {
-        let daysPerWeekUnformatted = [];
+        let daysPerWeekUnformatted = new Array<IDaysPerWeekUnformattedProps>();
+
+        function increaseDate(
+            n: number, 
+            body: Array<IDaysPerWeekUnformattedProps>, 
+            dateRef: Date, 
+            status: string
+        ) {
+            let arm = new Array<IDaysPerWeekUnformattedProps>();
+            let dateActual;
+
+            for(let i=1; i<=n; i++) {
+                dateActual = new Date(dateRef.getTime() - (86400000 * i));
+                
+                arm.push({
+                    date: dateActual.getDate(),
+                    day: dateActual.getDay(),
+                    month: dateActual.getMonth(),
+                    status,
+                    week: 0
+                })
+            }
+
+            arm.reverse();
+
+            if(status === 'before') {
+                return [...arm, ...body];
+            }
+            
+            return [...body, ...arm];
+        }
     
         const date = new Date(yearSelected, monthSelected, 1);
-        const auxFirst = date.getTime();
-        const dayFirst = date.getDay();
-        daysPerWeekUnformatted.push({date: date.getDate(), day: date.getDay()});
-    
-        let n = 1;
-    
-        for(var i = dayFirst; i > 0; i--) {
-            
-            let dateBefore = new Date(auxFirst - (86400000 * n));
-            
-            daysPerWeekUnformatted.unshift({date: dateBefore.getDate(), day: dateBefore.getDay()});
-    
-            n++;
-        }
+
+        daysPerWeekUnformatted = increaseDate(
+            date.getDay(),
+            daysPerWeekUnformatted,
+            date,
+            'before'
+        );
+
+        let dateLast = new Date(yearSelected, monthSelected + 1);
+
+        daysPerWeekUnformatted = increaseDate(
+            new Date(dateLast.getTime() - 86400000).getDate(),
+            daysPerWeekUnformatted,
+            dateLast,
+            'actual'
+        );
+
+        let qtd = 6 - new Date(dateLast.getTime() - 86400000).getDay();
+        let dateAfter = new Date(yearSelected, monthSelected + 1, qtd + 1);
+        daysPerWeekUnformatted = increaseDate(
+            qtd,
+            daysPerWeekUnformatted,
+            dateAfter,
+            'after'
+        );
         
-        const auxLast = new Date(yearSelected, monthSelected + 1, 1).getTime();
-        const dayLast = new Date(auxLast - 86400000).getDate();
-
-        for(var j = 1; j < dayLast; j++) {
-            let dateAfter = new Date(auxFirst + (86400000 * j));
-            
-            daysPerWeekUnformatted.push({date: dateAfter.getDate(), day: dateAfter.getDay()});
-        }
-
         const quantityOfWeek = daysPerWeekUnformatted.reduce((total, element) => {
             if(element.day === 0)
                 return total + 1;
@@ -53,27 +113,59 @@ const ContentCalendar: React.FC = () => {
         }, 0);
 
         daysPerWeekUnformatted = daysPerWeekUnformatted.map((item, index) => {
-            return {week: Math.floor(index / 7), ...item}
+            return {...item, week: Math.floor(index / 7)}
         });
 
-        const daysPerWeek = [];
+        const daysPerWeek = new Array<IDaysPerWeekUnformattedProps[]>();
 
-        for(var k = 0; k < quantityOfWeek; k++) {
+        const filterDays = (k: number) => {
             daysPerWeek.push(
                 daysPerWeekUnformatted.filter(item => item.week === k)
             );
         }
 
-        console.log({daysPerWeekUnformatted, daysPerWeek, quantityOfWeek});
+        for(var k = 0; k < quantityOfWeek; k++) {
+            filterDays(k);
+        }
 
         return daysPerWeek;
     }, [monthSelected, yearSelected]);
+
+    const handleDayClick = (date: number, day: number, month: number, year: number, status: string) => {
+        let monthUpdate = month;
+        let yearUpdate = year;
+        
+        if(status === 'before') {
+            yearUpdate = month === 11 ? year - 1 : year;
+        } else if(status === 'after') {
+            yearUpdate = month === 0 ? year + 1 : year;
+        }
+
+        localStorage.setItem('@calendar-react:dateSelect', String(date));
+        localStorage.setItem('@calendar-react:daySelect', String(day));
+        localStorage.setItem('@calendar-react:monthSelect', String(monthUpdate));
+        localStorage.setItem('@calendar-react:yearSelect', String(yearUpdate));
+        setDateSelected(date);
+        setDaySelected(day);
+        setMonthSelected(monthUpdate);
+        setYearSelected(yearUpdate);
+    };
+
+    const handleMonthClick = (status: string) => {
+
+    }
 
     return (
         <Container>
             <Header>
                 <Title>
-                    <strong>Janeiro</strong> de 2020
+                    <BiChevronLeft
+                        onClick={() => handleMonthClick('previous')}
+                    />
+                    <span><strong>{months[monthSelected]}</strong> de {yearSelected}</span>
+                    <BiChevronRight
+                        onClick={() => handleMonthClick('following')}
+                    />
                 </Title>
             </Header>
             <Content>
@@ -87,13 +179,28 @@ const ContentCalendar: React.FC = () => {
                     <span>Sab</span>
                 </WeekDay>
                 <CalendarDay>
-                    {fillDay.map(week => {
+                    {fillDay.map((week, indexW) => {
                         return (
-                            <WeekField>
-                                {week.map(day => {
+                            <WeekField key={"week" + indexW}>
+                                {week.map((dayField, indexD) => {
                                     return (
-                                        <DayField>
-                                            <span>{day.date}</span>
+                                        <DayField 
+                                            status={dayField.status}
+                                            key={"day" + indexD}
+                                            dateSelected={dateSelected}
+                                            dateField={dayField.date}
+                                            monthSelected={monthSelected}
+                                            monthField={dayField.month}
+                                        >
+                                            <button 
+                                                onClick={() => handleDayClick(
+                                                    dayField.date, 
+                                                    dayField.day,
+                                                    dayField.month,
+                                                    yearSelected,
+                                                    dayField.status
+                                                )}
+                                            >{dayField.date}</button>
                                         </DayField>
                                     )
                                 })}

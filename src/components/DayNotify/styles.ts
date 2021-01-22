@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 
 export const Container = styled.aside`
-    /* display: flex;
-    flex-direction: column;
-    align-items: center; */
     grid-area: DN;
     background-color: ${props => props.theme.colors.secondary};
     color: ${props => props.theme.colors.whiteOpacity};
@@ -43,6 +40,7 @@ export const Title = styled.title`
         }
     }
 
+    cursor: default;
 `;
 
 export const Content = styled.main`
@@ -92,15 +90,13 @@ export const ScheduleItem = styled.div`
 
     &::before{
         position: absolute;
-        bottom: -8px;
+        left: 0;
+        top: -5px;
         content: '';
         display: inline-block;
-        width: 8px;
-        height: 8px;
-        -moz-border-radius: 7.5px;
-        -webkit-border-radius: 7.5px;
-        border-radius: 7.5px;
-        background-color: none;
+        width: 0;
+        height: calc(100% + 10px);
+        background-color: ${props => props.theme.colors.white};
         -webkit-transition: all 3s;
         transition: all .3s;
     }
@@ -117,7 +113,7 @@ export const ScheduleItem = styled.div`
         border-color: ${props => props.theme.colors.white};
     }
     &:hover::before {
-        background-color: ${props => props.theme.colors.white};
+        width: 5px;
     }
 `;
 
