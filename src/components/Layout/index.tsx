@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import ContentCalendar from '../ContentCalendar';
 import DayNotify from '../DayNotify';
@@ -10,10 +10,19 @@ import {
 
 const Layout: React.FC = () => {
 
-    const [daySelected, setDaySelected] = useState<number>(new Date().getDay());
-    const [dateSelected, setDateSelected] = useState<number>(new Date().getDate());
-    const [monthSelected, setMonthSelected] = useState<number>(new Date().getMonth());
-    const [yearSelected, setYearSelected] = useState<number>(new Date().getFullYear());
+    const datePresent = new Date();
+
+    const [daySelected, setDaySelected] = useState<number>(datePresent.getDay());
+    const [dateSelected, setDateSelected] = useState<number>(datePresent.getDate());
+    const [monthSelected, setMonthSelected] = useState<number>(datePresent.getMonth());
+    const [yearSelected, setYearSelected] = useState<number>(datePresent.getFullYear());
+
+    useEffect(() => {
+        localStorage.setItem('@calendar-react:dateSelect', String(dateSelected));
+        localStorage.setItem('@calendar-react:daySelect', String(daySelected));
+        localStorage.setItem('@calendar-react:monthSelect', String(monthSelected));
+        localStorage.setItem('@calendar-react:yearSelect', String(yearSelected));
+    }, []);
 
     return (
         <Center>

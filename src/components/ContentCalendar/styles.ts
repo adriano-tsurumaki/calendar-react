@@ -84,7 +84,7 @@ export const DayField = styled.div<IDayFieldProps>`
         line-height: 40px;
         border-radius: 50%;
         font-size: 17px;
-        color: ${props => props.status === 'actual' ? '#000000' : '#A0A0A0'};
+        color: ${props => props.status === 'present' ? '#000000' : '#A0A0A0'};
         background-color: ${props => props.theme.colors.white};
         cursor: pointer;
         transition: all .3s;

@@ -55,15 +55,15 @@ const ContentCalendar: React.FC<IContentCalendarProps> = ({
             status: string
         ) {
             let arm = new Array<IDaysPerWeekUnformattedProps>();
-            let dateActual;
+            let datePresent;
 
             for(let i=1; i<=n; i++) {
-                dateActual = new Date(dateRef.getTime() - (86400000 * i));
+                datePresent = new Date(dateRef.getTime() - (86400000 * i));
                 
                 arm.push({
-                    date: dateActual.getDate(),
-                    day: dateActual.getDay(),
-                    month: dateActual.getMonth(),
+                    date: datePresent.getDate(),
+                    day: datePresent.getDay(),
+                    month: datePresent.getMonth(),
                     status,
                     week: 0
                 })
@@ -93,7 +93,7 @@ const ContentCalendar: React.FC<IContentCalendarProps> = ({
             new Date(dateLast.getTime() - 86400000).getDate(),
             daysPerWeekUnformatted,
             dateLast,
-            'actual'
+            'present'
         );
 
         let qtd = 6 - new Date(dateLast.getTime() - 86400000).getDay();
@@ -153,6 +153,31 @@ const ContentCalendar: React.FC<IContentCalendarProps> = ({
 
     const handleMonthClick = (status: string) => {
 
+        let year = Number(localStorage.getItem('@calendar-react:yearSelect'));
+        let month = Number(localStorage.getItem('@calendar-react:monthSelect'));
+
+        
+        if(status === 'previous') {
+            year = month === 0 ? year - 1: year;
+            month = month === 0 ? 11 : month - 1;
+        } else {
+            year = month === 11 ? year + 1: year;
+            month = month === 11 ? 0 : month + 1;
+        }
+
+        const date = new Date(year, month, 1);
+
+        localStorage.setItem('@calendar-react:yearSelect', String(year));
+        localStorage.setItem('@calendar-react:monthSelect', String(month));
+        localStorage.setItem('@calendar-react:daySelect', String(date.getDay()));
+        localStorage.setItem('@calendar-react:dateSelect', String(date.getDate()));
+
+        setYearSelected(year);
+        setMonthSelected(month);
+        setDaySelected(date.getDay());
+        setDateSelected(date.getDate());
+
+        // const date = localStorage.getItem('@calendar-react:dateSelect');
     }
 
     return (
