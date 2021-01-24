@@ -16,27 +16,54 @@ export const Title = styled.title`
     display: flex;
     align-items: center;
 
-    > svg {
-        font-size: 28px;
-    }
+    > a {
+        display: flex;
+        align-items: center;
 
-    > span {
-        margin-left: 10px;
-        font-size: 18px;
-        font-weight: 300;
+        color: ${props => props.theme.colors.whiteOpacity};
+        text-decoration: none;
 
-        > strong {
-            position: relative;
+        transform: translateX(-28px);
+        transition: all .3s;
 
-            &::after {
-                position: absolute;
-                content: '';
-                display: inline-block;
-                bottom: -3px;
-                left: 0;
-                width: 100%;
-                border-bottom: 2px solid ${props => props.theme.colors.whiteOpacity};
+        > svg {
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        &:hover {
+            color: white;
+            transform: translateX(0);
+
+            .BiPlus {
+                opacity: 1;
             }
+        }
+
+        > span {
+            margin-left: 10px;
+            font-size: 18px;
+            font-weight: 300;
+            cursor: pointer;
+
+            > strong {
+                position: relative;
+
+                &::after {
+                    position: absolute;
+                    content: '';
+                    display: inline-block;
+                    bottom: -3px;
+                    left: 0;
+                    width: 100%;
+                    border-bottom: 2px solid ${props => props.theme.colors.whiteOpacity};
+                }
+            }
+        }
+
+        .BiPlus {
+            opacity: 0;
+            transition: all .3s linear;
         }
     }
 

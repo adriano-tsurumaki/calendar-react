@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { BiCalendarCheck } from "react-icons/bi";
+import { Link } from 'react-router-dom';
+
+import { BiCalendarCheck, BiPlus } from "react-icons/bi";
 
 import { 
     Container,
@@ -40,8 +42,11 @@ const DayNotify: React.FC<IContentDayNotifyProps> = ({
         <Container>
             <Header>
                 <Title>
-                    <BiCalendarCheck />
-                    <span><strong>{days[daySelected]}</strong>, {dateSelected} de {months[monthSelected]}</span>
+                    <Link to={"/edit-event/" + String(new Date(yearSelected, monthSelected, dateSelected).getTime())}>
+                        <BiPlus className="BiPlus" />
+                        <BiCalendarCheck />
+                        <span><strong>{days[daySelected]}</strong>, {dateSelected} de {months[monthSelected]}</span>
+                    </Link>
                 </Title>
             </Header>
 

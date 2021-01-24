@@ -13,7 +13,7 @@ export const Container = styled.div`
     z-index: 1;
     grid-area: CC;
     
-    background-color: ${props => props.theme.colors.white};
+    background-color: ${props => props.theme.colors.background};
 `;
 
 export const Header = styled.div`
@@ -96,7 +96,7 @@ export const DayField = styled.div<IDayFieldProps>`
         border-radius: 50%;
         font-size: 17px;
         color: ${props => props.status === 'present' ? '#000000' : '#A0A0A0'};
-        background-color: ${props => props.theme.colors.white};
+        background-color: ${props => props.theme.colors.background};
         cursor: pointer;
         transition: all .3s;
     }
